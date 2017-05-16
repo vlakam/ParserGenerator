@@ -1,8 +1,14 @@
 @header {
 package regex;
+
+import laba4.Tree;
 }
 
 @members {
+}
+
+@main {
+BufferedWriter bw = new BufferedWriter(new FileWriter("out.dot"));
 }
 
 start -> Tree : e {return new Tree("S", e.get(0));}| {return new Tree("S");};

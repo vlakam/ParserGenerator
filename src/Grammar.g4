@@ -4,31 +4,72 @@ grammar Grammar;
    package laba4.grammar;
 }
 
-gramma : header? members? rule1* ;
+gramma
+    : header? members? main? rule1*
+    ;
 
-header : '@header' CODE # headerLabel ;
+header
+    : '@header' CODE # headerLabel
+    ;
 
-members : '@members' CODE # membersLabel ;
+members
+    : '@members' CODE # membersLabel
+    ;
 
-rule1 : NON_TERM_NAME inherited? ('->' synthesized)? ':' nonterminalProduction ('|' nonterminalProduction)* ';' # nonTerminalLabel
-      | TERM_NAME ':' terminalProduction ('|' terminalProduction)* ';' # terminalLabel ;
+main
+    : '@main' CODE # mainLabel
+    ;
 
-inherited : declAttrs ;
-declAttrs : '[' arg (',' arg)* ']' ;
-callAttrs : '[' CODE (',' CODE)* ']' ;
+rule1
+    : NON_TERM_NAME inherited? ('->' synthesized)? ':' nonterminalProduction ('|' nonterminalProduction)* ';' # nonTerminalLabel
+    | TERM_NAME ':' terminalProduction ('|' terminalProduction)* ';' # terminalLabel
+    ;
 
-arg : argType argName ;
+inherited
+    : declAttrs
+    ;
 
-argType : NON_TERM_NAME | TERM_NAME | MIXED_CASE;
-argName: NON_TERM_NAME | TERM_NAME | MIXED_CASE;
+declAttrs
+    : '[' arg (',' arg)* ']'
+    ;
 
-synthesized : NON_TERM_NAME | TERM_NAME | MIXED_CASE ;
+callAttrs
+    : '[' CODE (',' CODE)* ']'
+    ;
 
-nonterminalVariant : ((NON_TERM_NAME callAttrs?)| TERM_NAME);
+arg
+    : argType argName
+    ;
 
-nonterminalProduction : nonterminalVariant* CODE? ;
+argType
+    : NON_TERM_NAME
+    | TERM_NAME
+    | MIXED_CASE
+    ;
 
-terminalProduction : STRING+ ;
+argName
+    : NON_TERM_NAME
+    | TERM_NAME
+    | MIXED_CASE
+    ;
+
+synthesized
+    : NON_TERM_NAME
+    | TERM_NAME
+    | MIXED_CASE
+    ;
+
+nonterminalVariant
+    : ((NON_TERM_NAME callAttrs?)| TERM_NAME)
+    ;
+
+nonterminalProduction
+    : nonterminalVariant* CODE?
+    ;
+
+terminalProduction
+    : STRING+
+    ;
 
 NON_TERM_NAME : [a-z] [a-zA-Z_0-9]* ;
 TERM_NAME : [A-Z] [A-Z_0-9]* ;

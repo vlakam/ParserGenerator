@@ -1,0 +1,40 @@
+@header {
+package arithm;
+
+import laba4.Tree;
+}
+
+@main {
+BufferedWriter bw = new BufferedWriter(new FileWriter("out.dot"));
+result.printTree(0, bw);
+bw.flush();
+}
+
+start -> Tree
+    : t e1 {return new Tree("E", t.get(0), e1.get(0));}
+    ;
+
+e1 -> Tree
+    : PLUS t e1 {return new Tree("E1", new Tree("+"), t.get(0), e1.get(0));}
+    | {return new Tree("E1");}
+    ;
+
+t -> Tree
+    : f t1 {return new Tree("T", f.get(0), t1.get(0));}
+    ;
+
+t1 -> Tree
+    : MUL f t1 {return new Tree("T1", new Tree("*"), f.get(0), t1.get(0));}
+    | {return new Tree("T1");}
+    ;
+
+f -> Tree
+    : NUMBER {return new Tree("F", new Tree(NUMBER.get(0)));}
+    | OPEN_BRACKET start CLOSE_BRACKET {return new Tree("F", new Tree("("), start.get(0), new Tree(")"));}
+    ;
+
+OPEN_BRACKET: '(';
+CLOSE_BRACKET: ')';
+PLUS: '+';
+MUL: '*';
+NUMBER : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';

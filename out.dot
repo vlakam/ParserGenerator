@@ -1,0 +1,41 @@
+graph g {
+	"2101973421E0" [shape=circle, style=filled, fillcolor="lightblue", label="E"];
+	"685325104T1" [shape=circle, style=filled, fillcolor="lightblue", label="T"];
+	"460141958F2" [shape=circle, style=filled, fillcolor="lightblue", label="F"];
+	"116315788423" [shape=circle, style=filled, fillcolor="lightblue", label="2"];
+	"460141958F2" -- "116315788423";
+	{ rank=same "116315788423" }
+	"1956725890T12" [shape=circle, style=filled, fillcolor="lightblue", label="T1"];
+	"685325104T1" -- "460141958F2";
+	"685325104T1" -- "1956725890T12";
+	{ rank=same "460141958F2","1956725890T12" }
+	"356573597E11" [shape=circle, style=filled, fillcolor="lightblue", label="E1"];
+	"1735600054+2" [shape=circle, style=filled, fillcolor="lightblue", label="+"];
+	"21685669T2" [shape=circle, style=filled, fillcolor="lightblue", label="T"];
+	"2133927002F3" [shape=circle, style=filled, fillcolor="lightblue", label="F"];
+	"183601924024" [shape=circle, style=filled, fillcolor="lightblue", label="2"];
+	"2133927002F3" -- "183601924024";
+	{ rank=same "183601924024" }
+	"325040804T13" [shape=circle, style=filled, fillcolor="lightblue", label="T1"];
+	"1173230247*4" [shape=circle, style=filled, fillcolor="lightblue", label="*"];
+	"856419764F4" [shape=circle, style=filled, fillcolor="lightblue", label="F"];
+	"62100987525" [shape=circle, style=filled, fillcolor="lightblue", label="2"];
+	"856419764F4" -- "62100987525";
+	{ rank=same "62100987525" }
+	"1265094477T14" [shape=circle, style=filled, fillcolor="lightblue", label="T1"];
+	"325040804T13" -- "1173230247*4";
+	"325040804T13" -- "856419764F4";
+	"325040804T13" -- "1265094477T14";
+	{ rank=same "1173230247*4","856419764F4","1265094477T14" }
+	"21685669T2" -- "2133927002F3";
+	"21685669T2" -- "325040804T13";
+	{ rank=same "2133927002F3","325040804T13" }
+	"2125039532E12" [shape=circle, style=filled, fillcolor="lightblue", label="E1"];
+	"356573597E11" -- "1735600054+2";
+	"356573597E11" -- "21685669T2";
+	"356573597E11" -- "2125039532E12";
+	{ rank=same "1735600054+2","21685669T2","2125039532E12" }
+	"2101973421E0" -- "685325104T1";
+	"2101973421E0" -- "356573597E11";
+	{ rank=same "685325104T1","356573597E11" }
+}

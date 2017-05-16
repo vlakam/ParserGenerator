@@ -44,6 +44,18 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitMembersLabel(GrammarParser.MembersLabelContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code mainLabel}
+	 * labeled alternative in {@link GrammarParser#main}.
+	 * @param ctx the parse tree
+	 */
+	void enterMainLabel(GrammarParser.MainLabelContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code mainLabel}
+	 * labeled alternative in {@link GrammarParser#main}.
+	 * @param ctx the parse tree
+	 */
+	void exitMainLabel(GrammarParser.MainLabelContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code nonTerminalLabel}
 	 * labeled alternative in {@link GrammarParser#rule1}.
 	 * @param ctx the parse tree

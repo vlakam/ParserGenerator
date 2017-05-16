@@ -31,6 +31,7 @@ public class ParserGenerator {
 
     private String members = "";
     private String header = "";
+    private String main = "";
 
     public ParserGenerator(File outputDir) {
         this.outputDir = outputDir;
@@ -122,6 +123,13 @@ public class ParserGenerator {
                     header = refactorCode(ctx.CODE());
                 }
             }
+
+            @Override
+            public void enterMainLabel(GrammarParser.MainLabelContext ctx) {
+                if (ctx.CODE() != null) {
+                    main = refactorCode(ctx.CODE());
+                }
+            }
         };
         ParseTree tree = parser.gramma();
         walker.walk(visitor, tree);
@@ -132,12 +140,12 @@ public class ParserGenerator {
         }
         start = getNonTerm("start");
 
-        System.out.println(grammarName);
-        System.out.println(start.getName());
-        System.out.println("Nonterminals:");
-        printData(nonTerminals);
-        System.out.println("Terminals:");
-        printData(terminals);
+//        System.out.println(grammarName);
+//        System.out.println(start.getName());
+//        System.out.println("Nonterminals:");
+//        printData(nonTerminals);
+//        System.out.println("Terminals:");
+//        printData(terminals);
     }
 
     private static void printData(Map mp) {
@@ -215,12 +223,12 @@ public class ParserGenerator {
         for (String curStringTerminal : terminals.keySet()) {
             for (Production productionString : terminals.get(curStringTerminal).getProductionList()) {
                 out.println(String.format(
-                        (first ? "        if" : "        else if") +
+                        (first ? "\t\tif" : "\t\telse if") +
                                 " (\'%1$s\' == ((char) curChar)) {\n" +
-                                "            curToken = Token.%2$s;\n" +
-                                "            curString += (char) curChar;\n" +
+                                "\t\t\tcurToken = Token.%2$s;\n" +
+                                "\t\t\tcurString += (char) curChar;\n" +
                                 "\t\t\tnextChar();\n" +
-                                "        }",
+                                "\t\t}",
                         productionString.get(0).getName(), curStringTerminal.toUpperCase()
                 ));
                 first = false;
@@ -243,8 +251,8 @@ public class ParserGenerator {
         out.println("public class Main {");
         out.println("\tpublic static void main(String[] args) throws IOException, ParseException {");
         out.println("\t\tInputStream is = new FileInputStream(new File(\"input.txt\"));");
-        out.println("\t\tBufferedWriter bw = new BufferedWriter(new FileWriter(\"out.dot\"));");
-        out.println("\t\t(new "+ grammarName+"Parser" +"()).parse(is" + (start.getDeclAttrs(true).isEmpty() ? "" : ", " + start.getDeclAttrs(false)) + ");");
+        out.println("\t\t" + (start.getReturnType().equals("void") ? "" : start.getReturnType() + " result = ") + "(new "+ grammarName+"Parser" +"()).parse(is" + (start.getDeclAttrs(true).isEmpty() ? "" : ", " + start.getDeclAttrs(false)) + ");");
+        out.println(main);
         out.println("\t}");
         out.print("}");
         out.close();
@@ -358,9 +366,9 @@ public class ParserGenerator {
 
             out.print(
                     "\t\t\tdefault:\n" +
-                            "\t\t\t\tthrow new AssertionError();\n" +
-                            "\t\t}\n" +
-                            "\t}\n\n"
+                    "\t\t\t\tthrow new AssertionError();\n" +
+                    "\t\t}\n" +
+                    "\t}\n\n"
             );
         }
 
@@ -405,7 +413,7 @@ public class ParserGenerator {
 
         out.println(header);
 
-        out.print("public enum Token {\n    ");
+        out.print("public enum Token {\n\t");
         List<String> tokenNames = new ArrayList<>(terminals.keySet());
         for (int i = 0; i < tokenNames.size(); i++) {
             out.print(tokenNames.get(i) + (i != tokenNames.size() - 1 ? ", " : ""));
@@ -517,10 +525,10 @@ public class ParserGenerator {
         computeFirst();
         computeFollow();
 
-        System.out.println("FIRST set:");
-        printData(first);
-        System.out.println("FOLLOW set:");
-        printData(follow);
+//        System.out.println("FIRST set:");
+//        printData(first);
+//        System.out.println("FOLLOW set:");
+//        printData(follow);
 
         generateParser();
         generateMainFile();

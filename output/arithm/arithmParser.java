@@ -1,4 +1,6 @@
-package regex;
+package arithm;
+
+import laba4.Tree;
 
 import java.io.InputStream;
 import java.text.ParseException;
@@ -8,33 +10,37 @@ import java.util.List;
 
 import laba4.Tree;
 
-public class regexParser {
-	private regexLexer lex;
+public class arithmParser {
+	private arithmLexer lex;
 	
-	public void parse(InputStream is) throws ParseException, IOException {
-		lex = new regexLexer(is);
+	public Tree parse(InputStream is) throws ParseException, IOException {
+		lex = new arithmLexer(is);
 		lex.nextToken();
-		start();
+		return start();
 	}
 
-	private void t() throws ParseException, IOException {
+	private Tree t() throws ParseException, IOException {
 		switch (lex.curToken()) {
 			case NUMBER: {
-				f();
-				t1();
-				return;
+				List<Tree> f = new ArrayList<>();
+				List<Tree> t1 = new ArrayList<>();
+				f.add(f());
+				t1.add(t1());
+				return new Tree("T", f.get(0), t1.get(0));
 			}
 			case OPEN_BRACKET: {
-				f();
-				t1();
-				return;
+				List<Tree> f = new ArrayList<>();
+				List<Tree> t1 = new ArrayList<>();
+				f.add(f());
+				t1.add(t1());
+				return new Tree("T", f.get(0), t1.get(0));
 			}
 			default:
 				throw new AssertionError();
 		}
 	}
 
-	private void f() throws ParseException, IOException {
+	private Tree f() throws ParseException, IOException {
 		switch (lex.curToken()) {
 			case NUMBER: {
 				List<String> NUMBER = new ArrayList<>();
@@ -44,10 +50,11 @@ public class regexParser {
 					throw new AssertionError("NUMBER expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				return;
+				return new Tree("F", new Tree(NUMBER.get(0)));
 			}
 			case OPEN_BRACKET: {
 				List<String> OPEN_BRACKET = new ArrayList<>();
+				List<Tree> start = new ArrayList<>();
 				List<String> CLOSE_BRACKET = new ArrayList<>();
 				if (lex.curToken().toString().equals("OPEN_BRACKET")) {
 					OPEN_BRACKET.add(lex.curString());
@@ -55,84 +62,92 @@ public class regexParser {
 					throw new AssertionError("OPEN_BRACKET expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				start();
+				start.add(start());
 				if (lex.curToken().toString().equals("CLOSE_BRACKET")) {
 					CLOSE_BRACKET.add(lex.curString());
 				} else {
 					throw new AssertionError("CLOSE_BRACKET expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				return;
+				return new Tree("F", new Tree("("), start.get(0), new Tree(")"));
 			}
 			default:
 				throw new AssertionError();
 		}
 	}
 
-	private void start() throws ParseException, IOException {
+	private Tree start() throws ParseException, IOException {
 		switch (lex.curToken()) {
 			case NUMBER: {
-				t();
-				e1();
-				return;
+				List<Tree> t = new ArrayList<>();
+				List<Tree> e1 = new ArrayList<>();
+				t.add(t());
+				e1.add(e1());
+				return new Tree("E", t.get(0), e1.get(0));
 			}
 			case OPEN_BRACKET: {
-				t();
-				e1();
-				return;
+				List<Tree> t = new ArrayList<>();
+				List<Tree> e1 = new ArrayList<>();
+				t.add(t());
+				e1.add(e1());
+				return new Tree("E", t.get(0), e1.get(0));
 			}
 			default:
 				throw new AssertionError();
 		}
 	}
 
-	private void e1() throws ParseException, IOException {
+	private Tree e1() throws ParseException, IOException {
 		switch (lex.curToken()) {
 			case CLOSE_BRACKET: {
-				return;
+				return new Tree("E1");
 			}
 			case EOF: {
-				return;
+				return new Tree("E1");
 			}
 			case PLUS: {
 				List<String> PLUS = new ArrayList<>();
+				List<Tree> t = new ArrayList<>();
+				List<Tree> e1 = new ArrayList<>();
 				if (lex.curToken().toString().equals("PLUS")) {
 					PLUS.add(lex.curString());
 				} else {
 					throw new AssertionError("PLUS expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				t();
-				e1();
-				return;
+				t.add(t());
+				e1.add(e1());
+				return new Tree("E1", new Tree("+"), t.get(0), e1.get(0));
 			}
 			default:
 				throw new AssertionError();
 		}
 	}
 
-	private void t1() throws ParseException, IOException {
+	private Tree t1() throws ParseException, IOException {
 		switch (lex.curToken()) {
 			case MUL: {
 				List<String> MUL = new ArrayList<>();
+				List<Tree> f = new ArrayList<>();
+				List<Tree> t1 = new ArrayList<>();
 				if (lex.curToken().toString().equals("MUL")) {
 					MUL.add(lex.curString());
 				} else {
 					throw new AssertionError("MUL expected, instead of " + lex.curToken().toString());
 				}
 				lex.nextToken();
-				f();
-				t1();
-				return;
+				f.add(f());
+				t1.add(t1());
+				return new Tree("T1", new Tree("*"), f.get(0), t1.get(0));
 			}
 			case CLOSE_BRACKET: {
-				return;
+				return new Tree("T1");
 			}
 			case EOF: {
-				return;
+				return new Tree("T1");
 			}
 			case PLUS: {
-				return;
+				return new Tree("T1");
 			}
 			default:
 				throw new AssertionError();
